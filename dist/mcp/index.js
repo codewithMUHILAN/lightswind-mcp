@@ -813,11 +813,11 @@ server.setRequestHandler(types_js_1.CallToolRequestSchema, async (request) => {
     }
 });
 async function main() {
-    // Pre-warm components cache
-    await getComponents().catch(() => { });
     const transport = new stdio_js_1.StdioServerTransport();
     await server.connect(transport);
     console.error("✅ Lightswind MCP Server running");
+    // Pre-warm components cache in background (do NOT await!)
+    getComponents().catch(() => { });
 }
 main().catch((err) => {
     console.error("Fatal:", err);

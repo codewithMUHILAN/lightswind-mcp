@@ -869,11 +869,11 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 });
 
 async function main() {
-  // Pre-warm components cache
-  await getComponents().catch(() => {});
   const transport = new StdioServerTransport();
   await server.connect(transport);
   console.error("✅ Lightswind MCP Server running");
+  // Pre-warm components cache in background (do NOT await!)
+  getComponents().catch(() => {});
 }
 
 main().catch((err) => {
