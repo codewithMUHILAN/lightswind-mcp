@@ -115,6 +115,34 @@ async function fetchSecureBlock(blockId, apiKey) {
         }).on("error", reject);
     });
 }
+async function fetchSecureComponent(componentName, apiKey) {
+    const url = `https://pro.lightswind.com/api/v1/components?name=${componentName}`;
+    return new Promise((resolve, reject) => {
+        const parsedUrl = new URL(url);
+        const options = {
+            hostname: parsedUrl.hostname,
+            port: 443,
+            path: parsedUrl.pathname + parsedUrl.search,
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                ...(apiKey ? { "x-api-key": apiKey } : {})
+            }
+        };
+        https.get(options, (res) => {
+            let data = "";
+            res.on("data", (chunk) => (data += chunk));
+            res.on("end", () => {
+                try {
+                    resolve(JSON.parse(data));
+                }
+                catch (e) {
+                    reject(e);
+                }
+            });
+        }).on("error", reject);
+    });
+}
 async function getComponents() {
     if (componentsCache)
         return componentsCache;
@@ -401,25 +429,81 @@ async function handleGetComponent(args) {
             ],
         };
     }
-    const c = sanitizeComponent(found);
+    const isPro = found.paid === true || found.paid === "true" || found.paid === "pro" || found.paid === "lightswind:pro";
+    let reactCode = found.reactcode ?? "";
+    let htmlCode = found.htmlcode ?? "";
+    let dependencies = [];
+    let internalDependencies = [];
+    if (isPro) {
+        const apiKey = getApiKey();
+        try {
+            const res = await fetchSecureComponent(found.id, apiKey);
+            if (res.success && res.component && res.component.code) {
+                reactCode = res.component.code;
+                dependencies = res.component.dependencies || [];
+                internalDependencies = res.component.internalDependencies || [];
+            }
+            else {
+                const errorMsg = res.error || "Requires a Lightswind Pro subscription.";
+                return {
+                    content: [
+                        {
+                            type: "text",
+                            text: `## 🔒 Pro Component: ${found.title} (\`${found.id}\`)\n` +
+                                `- **Category**: ${found.keywords?.[0] ?? "general"}\n` +
+                                `- **Details Page**: https://pro.lightswind.com/components/${found.id}\n\n` +
+                                `> **Access Restricted**: ${errorMsg}\n\n` +
+                                `### How to unlock:\n` +
+                                `1. **Upgrade to Pro**: Go to https://lightswind.com/pricing and buy a Lightswind Pro plan to get your license key.\n` +
+                                `2. **Authenticate**: In your project terminal, log in using your license key:\n` +
+                                `   \`npx lightswind auth login --key=YOUR_KEY\`\n` +
+                                `3. **Install**: Run \`npx lightswind add ${found.id}\` or query it again in Cursor!`,
+                        },
+                    ],
+                };
+            }
+        }
+        catch (e) {
+            return {
+                content: [
+                    {
+                        type: "text",
+                        text: `## 🔒 Pro Component: ${found.title} (\`${found.id}\`)\n` +
+                            `- **Category**: ${found.keywords?.[0] ?? "general"}\n` +
+                            `- **Details Page**: https://pro.lightswind.com/components/${found.id}\n\n` +
+                            `> **Connection Error**: Failed to retrieve component code securely from server (${e.message}).\n\n` +
+                            `### How to unlock:\n` +
+                            `1. **Upgrade to Pro**: Verify you have an active Pro subscription at https://lightswind.com/pricing.\n` +
+                            `2. **Authenticate**: Log in using your license key in your terminal:\n` +
+                            `   \`npx lightswind auth login --key=YOUR_KEY\`\n` +
+                            `3. **Install**: Run \`npx lightswind add ${found.id}\` or query it again in Cursor!`,
+                    },
+                ],
+            };
+        }
+    }
+    const c = {
+        ...found,
+        reactcode: reactCode,
+        htmlcode: htmlCode
+    };
+    const sanitized = sanitizeComponent(c);
     let codeSection = "";
     if (format === "html" || format === "both") {
-        codeSection += `\n### HTML Code\n\`\`\`html\n${c.htmlCode}\n\`\`\`\n`;
+        codeSection += `\n### HTML Code\n\`\`\`html\n${sanitized.htmlCode}\n\`\`\`\n`;
     }
     if (format === "react" || format === "both") {
-        codeSection += `\n### React/JSX Code\n\`\`\`jsx\n${c.reactCode}\n\`\`\`\n`;
+        codeSection += `\n### React/JSX Code\n\`\`\`jsx\n${sanitized.reactCode}\n\`\`\`\n`;
     }
-    return {
-        content: [
-            {
-                type: "text",
-                text: `# ${c.title}${c.isPro ? " [PRO]" : ""}
-
-**Category**: ${c.category}  
-**ID**: \`${c.id}\`  
-**Description**: ${c.description}
-
-## Setup
+    let detailsText = `# ${sanitized.title}${isPro ? " [PRO]" : ""}\n\n` +
+        `**Category**: ${sanitized.category}  \n` +
+        `**ID**: \`${sanitized.id}\`  \n` +
+        `**Description**: ${sanitized.description}\n`;
+    if (isPro) {
+        detailsText += `\n- **Dependencies**: ${dependencies.join(", ") || "None"}\n` +
+            `- **Internal Components**: ${internalDependencies.join(", ") || "None"}\n`;
+    }
+    detailsText += `\n## Setup
 \`\`\`bash
 npm install lightswind
 \`\`\`
@@ -435,7 +519,12 @@ Import CSS in your root layout:
 import 'lightswind/styles.css';
 \`\`\`
 ${codeSection}
-> 💡 **Tip**: This component uses Lightswind's custom classes (e.g. \`bg-primarylw\`, \`text-darklw\`). Make sure the Lightswind plugin is active in your Tailwind config.`,
+> 💡 **Tip**: This component uses Lightswind's custom classes (e.g. \`bg-primarylw\`, \`text-darklw\`). Make sure the Lightswind plugin is active in your Tailwind config.`;
+    return {
+        content: [
+            {
+                type: "text",
+                text: detailsText,
             },
         ],
     };
