@@ -1,0 +1,895 @@
+{
+    "3d-MarqueewithCustomComponents": [
+        "framer-motion"
+    ],
+    "3d-carousel": [
+        "lucide-react"
+    ],
+    "3d-hover-gallery": [
+        "clsx",
+        "tailwind-merge"
+    ],
+    "3d-image-carousel": [
+        "lucide-react"
+    ],
+    "3d-image-gallery": [
+        "framer-motion"
+    ],
+    "3d-image-ring": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "3d-image-slider": [
+        "framer-motion",
+        "@radix-ui/react-slider"
+    ],
+    "3d-marquee": [
+        "framer-motion"
+    ],
+    "3d-model-viewer": [
+        "three",
+        "@types/three",
+        "@react-three/fiber",
+        "@react-three/drei"
+    ],
+    "3d-perspective-card": [],
+    "3d-perspective-cards": [],
+    "3d-scroll-trigger": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "3d-slider": [
+        "@radix-ui/react-slider"
+    ],
+    "CinematicScroll": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "Dock": [
+        "framer-motion"
+    ],
+    "HangingIdCard": [
+        "clsx",
+        "tailwind-merge"
+    ],
+    "ScrollSnapCarouselPin": [
+        "framer-motion"
+    ],
+    "ScrollVelocityContainer": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "SparkleCursor": [
+        "gsap"
+    ],
+    "SpectrumLoader": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "ThreeDImageCarousel": [
+        "lucide-react"
+    ],
+    "accordion": [
+        "lucide-react",
+        "clsx",
+        "tailwind-merge",
+        "@radix-ui/react-accordion"
+    ],
+    "ai-prompt": [
+        "framer-motion",
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "alert": [
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "alert-dialog": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge",
+        "@radix-ui/react-alert-dialog",
+        "@radix-ui/react-dialog"
+    ],
+    "angled-slider": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge",
+        "@radix-ui/react-slider"
+    ],
+    "animated-blob": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "animated-blob-background": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "animated-bubble-particles": [
+        "clsx",
+        "tailwind-merge"
+    ],
+    "animated-copy-button": [
+        "framer-motion",
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "animated-notification": [
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "animated-ocean-waves": [],
+    "animated-range-input": [
+        "framer-motion"
+    ],
+    "animated-wave": [
+        "three",
+        "@types/three",
+        "simplex-noise",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "ascii-wave": [],
+    "aspect-ratio": [
+        "clsx",
+        "tailwind-merge",
+        "@radix-ui/react-aspect-ratio"
+    ],
+    "aurora": [
+        "clsx",
+        "tailwind-merge"
+    ],
+    "aurora-background": [
+        "clsx",
+        "tailwind-merge"
+    ],
+    "aurora-shader": [],
+    "aurora-text-effect": [
+        "clsx",
+        "tailwind-merge"
+    ],
+    "avatar": [
+        "clsx",
+        "tailwind-merge",
+        "@radix-ui/react-avatar"
+    ],
+    "badge": [
+        "clsx",
+        "tailwind-merge"
+    ],
+    "beam-circle": [
+        "framer-motion",
+        "lucide-react"
+    ],
+    "beam-grid": [],
+    "beam-grid-background": [],
+    "bento-grid": [
+        "clsx",
+        "tailwind-merge"
+    ],
+    "border-beam": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "breadcrumb": [
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "button": [
+        "clsx",
+        "tailwind-merge"
+    ],
+    "calendar": [
+        "framer-motion",
+        "lucide-react",
+        "react-day-picker",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "canvas-confetti-cursor": [],
+    "card": [
+        "clsx",
+        "tailwind-merge"
+    ],
+    "carousel": [
+        "lucide-react",
+        "embla-carousel-react",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "chain-carousel": [
+        "framer-motion",
+        "lucide-react"
+    ],
+    "chart": [
+        "recharts",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "checkbox": [
+        "lucide-react",
+        "clsx",
+        "tailwind-merge",
+        "@radix-ui/react-checkbox"
+    ],
+    "chroma-flow": [
+        "framer-motion",
+        "three",
+        "@types/three"
+    ],
+    "chroma-flow-background": [
+        "framer-motion",
+        "three",
+        "@types/three"
+    ],
+    "code-hover-cards": [
+        "lucide-react",
+        "clsx",
+        "tailwind-merge",
+        "@radix-ui/react-hover-card"
+    ],
+    "collapsible": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge",
+        "@radix-ui/react-collapsible"
+    ],
+    "command": [
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "confetti-button": [
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "connection-graph": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "context-menu": [
+        "framer-motion",
+        "lucide-react",
+        "clsx",
+        "tailwind-merge",
+        "@radix-ui/react-context-menu"
+    ],
+    "cool-bento-effect": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "cool-theme-toggle": [
+        "framer-motion",
+        "lucide-react",
+        "clsx",
+        "tailwind-merge",
+        "@radix-ui/react-toggle"
+    ],
+    "cosmic-singularity": [
+        "framer-motion",
+        "three",
+        "@types/three"
+    ],
+    "cosmic-singularity-background": [
+        "framer-motion",
+        "three",
+        "@types/three"
+    ],
+    "count-up": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "cyber-hive": [
+        "framer-motion",
+        "three",
+        "@types/three"
+    ],
+    "cyber-hive-background": [
+        "framer-motion",
+        "three",
+        "@types/three"
+    ],
+    "dialog": [
+        "framer-motion",
+        "lucide-react",
+        "@radix-ui/react-dialog"
+    ],
+    "dot-grid": [],
+    "dot-grid-background": [],
+    "dot-pattern": [
+        "clsx",
+        "tailwind-merge"
+    ],
+    "drag-order-list": [
+        "framer-motion",
+        "lucide-react"
+    ],
+    "draggable-reorder-list": [
+        "framer-motion",
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "drawer": [
+        "framer-motion",
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "dropdown-menu": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge",
+        "@radix-ui/react-dropdown-menu"
+    ],
+    "dynamic-island": [
+        "framer-motion"
+    ],
+    "dynamic-navigation": [
+        "clsx",
+        "tailwind-merge"
+    ],
+    "electro-border": [],
+    "ether-waves": [
+        "framer-motion",
+        "three",
+        "@types/three"
+    ],
+    "ether-waves-background": [
+        "framer-motion",
+        "three",
+        "@types/three"
+    ],
+    "expandable-search-bar": [
+        "framer-motion",
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "expandable-speed-dial": [
+        "framer-motion",
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "fall-beam": [],
+    "fall-beam-background": [],
+    "fluid-chrome": [
+        "framer-motion",
+        "three",
+        "@types/three"
+    ],
+    "fluid-chrome-background": [
+        "framer-motion",
+        "three",
+        "@types/three"
+    ],
+    "form": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge",
+        "react-hook-form",
+        "@hookform/resolvers",
+        "zod"
+    ],
+    "glass-folder": [
+        "clsx",
+        "tailwind-merge"
+    ],
+    "globe": [
+        "cobe",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "glowing": [],
+    "glowing-background": [],
+    "glowing-cards": [
+        "clsx",
+        "tailwind-merge"
+    ],
+    "glowing-lights": [],
+    "gradient": [],
+    "gradient-background": [],
+    "gradient-btn-home": [],
+    "gradient-button": [],
+    "grid-dot-backgrounds": [
+        "clsx",
+        "tailwind-merge"
+    ],
+    "hamburger-menu-overlay": [
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "hell": [],
+    "hell-background": [],
+    "hover-card": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge",
+        "@radix-ui/react-hover-card"
+    ],
+    "image-reveal": [
+        "framer-motion",
+        "lucide-react"
+    ],
+    "image-sliding-marquee": [
+        "framer-motion"
+    ],
+    "image-trail-effect": [
+        "clsx",
+        "tailwind-merge"
+    ],
+    "infinite-drift": [
+        "three",
+        "@types/three",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "infinite-webgl-scroll": [],
+    "input": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "input-otp": [
+        "lucide-react",
+        "input-otp",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "interactive-card": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "interactive-card-gallery": [
+        "clsx",
+        "tailwind-merge"
+    ],
+    "interactive-gradient-card": [
+        "clsx",
+        "tailwind-merge"
+    ],
+    "interactive-grid": [],
+    "interactive-grid-background": [],
+    "iphone16-pro": [],
+    "label": [
+        "clsx",
+        "tailwind-merge",
+        "@radix-ui/react-label"
+    ],
+    "lens": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "liquid-fluid": [
+        "framer-motion",
+        "gsap"
+    ],
+    "liquid-surface": [
+        "three",
+        "@types/three",
+        "gsap",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "looping-words": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "magic-card": [
+        "clsx",
+        "tailwind-merge"
+    ],
+    "magic-loader": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "magnetic-button": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "magnetic-field": [
+        "framer-motion"
+    ],
+    "magnetic-field-background": [
+        "framer-motion"
+    ],
+    "marquee-menu": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "menubar": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge",
+        "@radix-ui/react-menubar"
+    ],
+    "morphing-navigation": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "nav-effect": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "navigation-menu": [
+        "lucide-react",
+        "clsx",
+        "tailwind-merge",
+        "@radix-ui/react-navigation-menu"
+    ],
+    "nebula-flow": [
+        "framer-motion"
+    ],
+    "neural-link": [
+        "framer-motion"
+    ],
+    "neural-link-background": [
+        "framer-motion"
+    ],
+    "orbit-card": [],
+    "pagination": [
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "particle-orbit-effect": [
+        "clsx",
+        "tailwind-merge"
+    ],
+    "particles": [
+        "clsx",
+        "tailwind-merge"
+    ],
+    "particles-background": [
+        "clsx",
+        "tailwind-merge"
+    ],
+    "password-strength-indicator": [
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "plasma-globe": [],
+    "plasma-globe.tsx": [],
+    "popover": [
+        "framer-motion",
+        "lucide-react",
+        "clsx",
+        "tailwind-merge",
+        "@radix-ui/react-popover"
+    ],
+    "progress": [
+        "clsx",
+        "tailwind-merge",
+        "@radix-ui/react-progress"
+    ],
+    "quantum-field": [
+        "framer-motion"
+    ],
+    "radio-group": [
+        "clsx",
+        "tailwind-merge",
+        "@radix-ui/react-radio-group"
+    ],
+    "rays": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "rays-background": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "reflect": [],
+    "reflect-background": [],
+    "resizable": [
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "ripple-button": [],
+    "ripple-loader": [
+        "framer-motion"
+    ],
+    "rolling-text-3d": [
+        "gsap",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "satin-flow": [
+        "framer-motion"
+    ],
+    "scroll-area": [
+        "clsx",
+        "tailwind-merge",
+        "@radix-ui/react-scroll-area"
+    ],
+    "scroll-cards": [
+        "gsap",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "scroll-carousel": [
+        "gsap",
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "scroll-list": [
+        "framer-motion"
+    ],
+    "scroll-para": [
+        "gsap",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "scroll-para-3d": [
+        "gsap",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "scroll-reveal": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "scroll-stack": [],
+    "scroll-timeline": [
+        "framer-motion",
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "scroll-trigger-carousel": [
+        "framer-motion"
+    ],
+    "seasonal-hover-cards": [
+        "clsx",
+        "tailwind-merge",
+        "@radix-ui/react-hover-card"
+    ],
+    "select": [
+        "framer-motion",
+        "lucide-react",
+        "clsx",
+        "tailwind-merge",
+        "@radix-ui/react-select"
+    ],
+    "separator": [
+        "clsx",
+        "tailwind-merge",
+        "@radix-ui/react-separator"
+    ],
+    "shader": [],
+    "shader-background": [],
+    "sheet": [
+        "framer-motion",
+        "lucide-react",
+        "clsx",
+        "tailwind-merge",
+        "@radix-ui/react-dialog"
+    ],
+    "shine-button": [],
+    "shiny-text": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "sidebar": [
+        "framer-motion",
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "skeleton": [
+        "clsx",
+        "tailwind-merge"
+    ],
+    "slide-to-confirm": [
+        "framer-motion",
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "slider": [
+        "clsx",
+        "tailwind-merge",
+        "@radix-ui/react-slider"
+    ],
+    "sliding-cards": [
+        "clsx",
+        "tailwind-merge"
+    ],
+    "sliding-logo-marquee": [
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "smokey": [],
+    "smokey-background": [],
+    "smokey-cursor": [],
+    "smokey-cursor-hero": [
+        "framer-motion"
+    ],
+    "smooth-cursor": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "sparkle-navbar": [
+        "gsap"
+    ],
+    "sparkle-particles": [],
+    "stack-list": [
+        "framer-motion",
+        "lucide-react"
+    ],
+    "stepper": [
+        "framer-motion",
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "stripes": [
+        "clsx",
+        "tailwind-merge"
+    ],
+    "stripes-background": [
+        "clsx",
+        "tailwind-merge"
+    ],
+    "stylish-carousel": [
+        "framer-motion",
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "switch": [
+        "clsx",
+        "tailwind-merge",
+        "@radix-ui/react-switch"
+    ],
+    "table": [
+        "clsx",
+        "tailwind-merge"
+    ],
+    "tabs": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge",
+        "@radix-ui/react-tabs"
+    ],
+    "team-carousel": [
+        "framer-motion",
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "terminal-card": [
+        "framer-motion",
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "test": [],
+    "text-scroll-marquee": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "textarea": [
+        "clsx",
+        "tailwind-merge"
+    ],
+    "toast": [
+        "framer-motion",
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "toaster": [
+        "framer-motion",
+        "lucide-react"
+    ],
+    "toggle": [
+        "clsx",
+        "tailwind-merge",
+        "@radix-ui/react-toggle"
+    ],
+    "toggle-group": [
+        "clsx",
+        "tailwind-merge",
+        "@radix-ui/react-toggle",
+        "@radix-ui/react-toggle-group"
+    ],
+    "toggle-theme": [
+        "lucide-react",
+        "clsx",
+        "tailwind-merge",
+        "@radix-ui/react-toggle"
+    ],
+    "tooltip": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge",
+        "@radix-ui/react-tooltip"
+    ],
+    "top-loader": [
+        "clsx",
+        "tailwind-merge"
+    ],
+    "top-sticky-bar": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "trial-button": [],
+    "trusted-users": [
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "typewriter-input": [
+        "clsx",
+        "tailwind-merge"
+    ],
+    "typing-text": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "vector-flow": [
+        "framer-motion"
+    ],
+    "video-modal": [
+        "framer-motion",
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "video-text": [
+        "framer-motion",
+        "clsx",
+        "tailwind-merge"
+    ],
+    "wave": [
+        "framer-motion"
+    ],
+    "wave-background": [
+        "framer-motion"
+    ],
+    "woofy-hover-image": [
+        "three",
+        "@types/three",
+        "clsx",
+        "tailwind-merge"
+    ]
+}
