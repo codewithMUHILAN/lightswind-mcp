@@ -3,12 +3,15 @@ const path = require('path');
 
 const uiDir = path.join(__dirname, 'dist/components/ui');
 
-if (!fs.existsSync(uiDir)) {
-  console.log(`Directory does not exist: ${uiDir}`);
-  process.exit(0);
-}
-
 let stats = { changed: 0, skipped: 0, files: [] };
+
+function runNormalize() {
+  if (!fs.existsSync(uiDir)) {
+    console.log(`ℹ️  Skipping component imports normalization (directory does not exist: ${uiDir})`);
+    return;
+  }
+  processDir(uiDir);
+}
 
 function processDir(dir) {
   const list = fs.readdirSync(dir);
@@ -66,7 +69,22 @@ function processDir(dir) {
   }
 }
 
-processDir(uiDir);
+runNormalize();
+
+// Copy styles.css to dist folder for exports
+try {
+  const distDir = path.join(__dirname, 'dist');
+  if (!fs.existsSync(distDir)) {
+    fs.mkdirSync(distDir, { recursive: true });
+  }
+  fs.copyFileSync(
+    path.join(__dirname, 'src/styles/lightswind.css'),
+    path.join(distDir, 'styles.css')
+  );
+  console.log('✅ Copied styles.css to dist/styles.css');
+} catch (e) {
+  console.error('❌ Failed to copy styles.css:', e.message);
+}
 
 console.log(`\n✅ Done!`);
 console.log(`Changed: ${stats.changed} files`);

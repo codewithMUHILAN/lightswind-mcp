@@ -95,7 +95,7 @@ npx lightswind auth logout
 | `npx lightswind auth login [key]` | Log in and authenticate CLI session with your Pro key |
 | `npx lightswind auth logout` | Log out and purge local credentials |
 | `npx lightswind mcp` | Run the Lightswind MCP server for real-time AI component access |
-| `npx lightswind mcp install` | Auto-configure MCP config inside Cursor and Claude Desktop settings |
+| `npx lightswind mcp init` | Auto-configure MCP config inside Cursor and Claude Desktop settings |
 
 ---
 
@@ -346,6 +346,58 @@ Lightswind UI utilizes a unified native CSS variable strategy. Easily alter your
   --foreground: 0 0% 100%;
 }
 ```
+
+---
+
+## 🤖 Model Context Protocol (MCP) Integration
+
+Lightswind UI comes with a built-in MCP server that enables AI agents (like Cursor, Claude Desktop, Windsurf, etc.) to query, view, and construct layouts using your component library.
+
+### 1. Easiest Setup (Auto-Config)
+Detect and register the MCP server inside Cursor and Claude Desktop automatically:
+```bash
+npx lightswind mcp init
+```
+
+### 2. Manual Configuration
+Append the server mapping directly to your editors' config files:
+
+#### Cursor (`~/.cursor/mcp.json`)
+```json
+{
+  "mcpServers": {
+    "lightswind-ui": {
+      "command": "npx",
+      "args": ["-y", "lightswind", "mcp"]
+    }
+  }
+}
+```
+
+#### Claude Desktop (Configuration file location: `%APPDATA%\Claude\claude_desktop_config.json` on Windows, or `~/Library/Application Support/Claude/claude_desktop_config.json` on macOS)
+```json
+{
+  "mcpServers": {
+    "lightswind-ui": {
+      "command": "npx",
+      "args": ["-y", "lightswind", "mcp"]
+    }
+  }
+}
+```
+
+### 3. Exhaustive MCP Tools Reference
+
+| Tool Name | Parameters | Expected Output | Description | Prompt Example |
+| :--- | :--- | :--- | :--- | :--- |
+| `list_all_components` | `category?: string`, `limit?: number` | Markdown list | List available components. | *"Show me a list of all background components available in Lightswind UI."* |
+| `get_component` | `name: string`, `format?: 'react' \| 'html' \| 'both'` | Raw code | Fetch the TSX/HTML source code for any component. | *"Give me the React code for the border-beam component."* |
+| `search_components` | `query: string`, `limit?: number`, `react_only?: boolean` | Grouped list | Fuzzy-search components with natural language. | *"Find components that create a glowing background or bubble particles."* |
+| `list_categories` | None | Array of categories | Retrieve all component categories. | *"List the categories of components I can browse."* |
+| `get_block` | `name: string` | Section TSX code | Retrieve full Pro page layout blocks. | *"Get the pricing block template from Lightswind Pro."* |
+| `list_blocks` | None | Markdown list | List all available Pro page blocks. | *"What landing page templates or sections do we have in Lightswind blocks?"* |
+| `get_installation_guide` | `framework?: 'nextjs' \| 'react' \| 'vite'` | Setup guide | Get setup and Tailwind integration steps. | *"Show me the installation guide for setting up Lightswind UI in Vite."* |
+| `get_usage_example` | `section: string` | Composite TSX code | Generate composite layouts using multiple components. | *"Create a complete hero section layout combining the aurora background and typing text components."* |
 
 ---
 

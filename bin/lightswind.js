@@ -12,13 +12,14 @@ const { createHmac } = require("crypto");
 // --- Configuration ---
 const COMPONENT_DEPS_MAP = require("./component-deps.json");
 const PACKAGE_ROOT = path.join(__dirname, "..");
-const DIST_COMPONENTS_DIR = path.join(PACKAGE_ROOT, "dist", "components");
+const selfPackageJson = fs.readJsonSync(path.join(PACKAGE_ROOT, "package.json"));
+const selfName = selfPackageJson.name || "lightswind";
 
-// Source paths from the package
-const ALL_UI_FROM = path.join(DIST_COMPONENTS_DIR, "ui");
-const LIB_FROM = path.join(DIST_COMPONENTS_DIR, "lib");
-const HOOKS_FROM = path.join(DIST_COMPONENTS_DIR, "hooks");
-const STYLES_FROM = path.join(DIST_COMPONENTS_DIR, "styles", "lightswind.css");
+// Source paths from the package (using original TypeScript source files)
+const ALL_UI_FROM = path.join(PACKAGE_ROOT, "src", "components", "ui");
+const LIB_FROM = path.join(PACKAGE_ROOT, "src", "components", "lib");
+const HOOKS_FROM = path.join(PACKAGE_ROOT, "src", "components", "hooks");
+const STYLES_FROM = path.join(PACKAGE_ROOT, "src", "styles", "lightswind.css");
 
 // User's current working directory
 const USER_CWD = process.cwd();
@@ -327,6 +328,16 @@ function rewriteImports(content) {
     changed = true;
   }
 
+  // Normalize absolute component-level references for hooks and lib to point to correct user paths
+  if (content.includes('@/components/hooks/')) {
+    content = content.split('@/components/hooks/').join('@/hooks/');
+    changed = true;
+  }
+  if (content.includes('@/components/lib/')) {
+    content = content.split('@/components/lib/').join('@/lib/');
+    changed = true;
+  }
+
   // Convert Next.js Image component to HTML img tags for non-Next.js frameworks
   try {
     const paths = getPaths();
@@ -337,61 +348,76 @@ function rewriteImports(content) {
         content = content.replace(/<\/Image>/g, '');
         changed = true;
       }
-
-      // For non-Next.js frameworks, rewrite absolute imports to relative imports
-      // @/lib/utils → ../../lib/utils
-      if (content.includes('@/lib/utils')) {
-        content = content.replace(/from\s+["']@\/lib\/utils["']/g, 'from "../../lib/utils"');
-        changed = true;
-      }
-
-      // @/components/lib/utils → ../../lib/utils
-      if (content.includes('@/components/lib/utils')) {
-        content = content.replace(/from\s+["']@\/components\/lib\/utils["']/g, 'from "../../lib/utils"');
-        changed = true;
-      }
-
-      // @/lib/hooks → ../../lib/hooks
-      if (content.includes('@/lib/hooks')) {
-        content = content.replace(/from\s+["']@\/lib\/hooks["']/g, 'from "../../lib/hooks"');
-        changed = true;
-      }
-
-      // @/hooks/<hook> → ../../hooks/<hook>
-      if (content.includes('@/hooks/')) {
-        content = content.replace(/from\s+["']@\/hooks\/([^"']+)["']/g, 'from "../../hooks/$1"');
-        changed = true;
-      }
-
-      // @/components/lightswind/<comp> → ./<comp> (same folder)
-      if (content.includes('@/components/lightswind/')) {
-        content = content.replace(/from\s+["']@\/components\/lightswind\/([^"']+)["']/g, 'from "./$1"');
-        changed = true;
-      }
-
-      // Fix incorrect relative paths (../hooks → ../../hooks)
-      if (content.includes('../hooks/')) {
-        content = content.replace(/from\s+["']\.\.\/hooks\/([^"']+)["']/g, 'from "../../hooks/$1"');
-        changed = true;
-      }
-      if (content.includes('../lib/')) {
-        content = content.replace(/from\s+["']\.\.\/lib\/([^"']+)["']/g, 'from "../../lib/$1"');
-        changed = true;
-      }
-      
-      // Fix over-extended relative paths (../../../ → ../../)
-      if (content.includes('../../../lib/')) {
-        content = content.replace(/from\s+["']\.\.\/\.\.\/\.\.\/lib\/([^"']+)["']/g, 'from "../../lib/$1"');
-        changed = true;
-      }
-      if (content.includes('../../../hooks/')) {
-        content = content.replace(/from\s+["']\.\.\/\.\.\/\.\.\/hooks\/([^"']+)["']/g, 'from "../../hooks/$1"');
-        changed = true;
-      }
     }
   } catch (e) {}
 
   return content;
+}
+
+/**
+ * Auto-detect internal component dependencies by parsing import statements
+ */
+function detectInternalDependencies(code) {
+  const deps = new Set();
+  
+  // 1. Matches relative imports like './card' or '../../card'
+  const relativeImportRegex = /from\s+["']\.\.?\/(?:\.\.?\/)*([\w-]+)["']/g;
+  let match;
+  while ((match = relativeImportRegex.exec(code)) !== null) {
+    const compName = match[1];
+    const excluded = ['utils', 'hooks', 'styles', 'react', 'lucide-react', 'framer-motion', 'next', 'index', 'db', 'app'];
+    if (!excluded.includes(compName) && !compName.startsWith('use-')) {
+      deps.add(compName);
+    }
+  }
+
+  // 2. Matches absolute alias imports like '@/components/lightswind/card'
+  const aliasImportRegex = /from\s+["']@\/?components\/lightswind\/([\w-]+)["']/g;
+  while ((match = aliasImportRegex.exec(code)) !== null) {
+    const compName = match[1];
+    deps.add(compName);
+  }
+
+  return Array.from(deps);
+}
+
+/**
+ * Auto-detect external NPM dependencies by parsing import statements
+ */
+function detectExternalDependencies(code) {
+  const deps = new Set();
+  
+  const importRegex = /from\s+["']([^"']+)["']/g;
+  let match;
+  while ((match = importRegex.exec(code)) !== null) {
+    const importPath = match[1];
+    
+    if (
+      importPath.startsWith('.') || 
+      importPath.startsWith('@/') || 
+      importPath.startsWith('@components/')
+    ) {
+      continue;
+    }
+    
+    let pkgName;
+    if (importPath.startsWith('@')) {
+      const parts = importPath.split('/');
+      pkgName = parts.slice(0, 2).join('/');
+    } else {
+      pkgName = importPath.split('/')[0];
+    }
+    
+    const excluded = [
+      'react', 'react-dom', 'next', 'path', 'fs', 'os', 'child_process', 'typescript'
+    ];
+    
+    if (pkgName && !excluded.includes(pkgName)) {
+      deps.add(pkgName);
+    }
+  }
+  
+  return Array.from(deps);
 }
 
 
@@ -537,6 +563,10 @@ function getMissingDependencies(required, userPkg) {
     required.push(selfName);
   }
 
+  // Filter out any invalid dependency names like AnimationType
+  const invalidDeps = ["AnimationType"];
+  required = required.filter(dep => !invalidDeps.includes(dep));
+
   return required.filter(dep => !installed[dep]);
 }
 
@@ -563,22 +593,70 @@ function promptUser(question) {
 }
 
 /**
+ * Detect the package manager based on user agent or lockfiles
+ */
+function detectPackageManager() {
+  const userAgent = process.env.npm_config_user_agent || "";
+  if (userAgent.includes("pnpm")) return "pnpm";
+  if (userAgent.includes("yarn")) return "yarn";
+  if (userAgent.includes("bun")) return "bun";
+
+  try {
+    if (fs.existsSync(path.join(PROJECT_ROOT, "pnpm-lock.yaml"))) return "pnpm";
+    if (fs.existsSync(path.join(PROJECT_ROOT, "yarn.lock"))) return "yarn";
+    if (fs.existsSync(path.join(PROJECT_ROOT, "bun.lockb")) || fs.existsSync(path.join(PROJECT_ROOT, "bun.lock"))) return "bun";
+  } catch (e) {}
+
+  return "npm";
+}
+
+/**
  * Install npm dependencies
  */
 function installDependencies(deps) {
   if (deps.length === 0) return;
 
-  console.log(`\n⏳ Installing ${deps.join(", ")}...`);
-  const cmd = `npm install ${deps.join(" ")}`;
+  const pm = detectPackageManager();
+  console.log(`\n⏳ Installing ${deps.join(", ")} using ${pm}...`);
+
+  let cmd;
+  switch (pm) {
+    case "pnpm":
+      cmd = `pnpm add ${deps.join(" ")}`;
+      break;
+    case "yarn":
+      cmd = `yarn add ${deps.join(" ")}`;
+      break;
+    case "bun": {
+      let bunCmd = "bun";
+      try {
+        execSync("bun --version", { stdio: "ignore" });
+      } catch (e) {
+        const home = os.homedir();
+        const winPath = path.join(home, ".bun", "bin", "bun.exe");
+        const unixPath = path.join(home, ".bun", "bin", "bun");
+        if (fs.existsSync(winPath)) {
+          bunCmd = `"${winPath}"`;
+        } else if (fs.existsSync(unixPath)) {
+          bunCmd = `"${unixPath}"`;
+        }
+      }
+      cmd = `${bunCmd} add ${deps.join(" ")}`;
+      break;
+    }
+    case "npm":
+    default:
+      cmd = `npm install ${deps.join(" ")}`;
+      break;
+  }
 
   try {
     execSync(cmd, { stdio: "inherit", cwd: USER_CWD });
     console.log("✅ Dependencies installed successfully\n");
   } catch (error) {
-    console.error("❌ Failed to install dependencies");
-    console.error("💡 If this is an npm cache or network error, try running:");
-    console.error("   npm cache clean --force");
-    console.error("   Or install them manually:", deps.join(" "));
+    console.error(`❌ Failed to install dependencies using ${pm}`);
+    console.error("💡 Try installing them manually:");
+    console.error(`   ${pm === "npm" ? "npm install" : pm + " add"} ${deps.join(" ")}`);
   }
 }
 
@@ -726,6 +804,90 @@ async function copySharedUtils() {
   // If this is a new CSS file install, prompt for the theme
   if (isNewStylesFile && fs.existsSync(paths.STYLES_TO)) {
     await promptAndApplyTheme(paths.STYLES_TO);
+  }
+
+  // Auto-configure path alias mappings if needed
+  configureTsConfigAlias();
+  configureViteConfigAlias();
+}
+
+/**
+ * Auto-configure import aliases (@/* -> ./src/*) in tsconfig.json / tsconfig.app.json if missing
+ */
+function configureTsConfigAlias() {
+  const possibleTsConfigs = ['tsconfig.app.json', 'tsconfig.json'];
+  let configPath = null;
+  for (const config of possibleTsConfigs) {
+    const fullPath = path.join(USER_CWD, config);
+    if (fs.existsSync(fullPath)) {
+      configPath = fullPath;
+      break;
+    }
+  }
+
+  if (!configPath) return;
+
+  try {
+    let content = fs.readFileSync(configPath, 'utf8');
+    if (content.includes('"@/*"') || content.includes("'@/*'")) {
+      return; // Already configured
+    }
+
+    const compilerOptionsRegex = /"compilerOptions"\s*:\s*\{/;
+    if (compilerOptionsRegex.test(content)) {
+      content = content.replace(
+        compilerOptionsRegex,
+        `"compilerOptions": {\n    "paths": {\n      "@/*": ["./src/*"]\n    },`
+      );
+      fs.writeFileSync(configPath, content, 'utf8');
+      console.log(`✅ Configured import alias "@/*" in ${path.basename(configPath)}`);
+    }
+  } catch (e) {
+    // Fail silently
+  }
+}
+
+/**
+ * Auto-configure import aliases (@ -> ./src) in vite.config.ts / vite.config.js if missing
+ */
+function configureViteConfigAlias() {
+  const possibleViteConfigs = ['vite.config.ts', 'vite.config.js', 'vite.config.mts', 'vite.config.mjs'];
+  let configPath = null;
+  for (const config of possibleViteConfigs) {
+    const fullPath = path.join(USER_CWD, config);
+    if (fs.existsSync(fullPath)) {
+      configPath = fullPath;
+      break;
+    }
+  }
+
+  if (!configPath) return;
+
+  try {
+    let content = fs.readFileSync(configPath, 'utf8');
+    if (content.includes('"@"') || content.includes("'@'") || content.includes('path.resolve')) {
+      return; // Already configured
+    }
+
+    if (!content.includes("import path from 'path'") && !content.includes('import path from "path"')) {
+      content = "import path from 'path'\n" + content;
+    }
+
+    if (content.includes('resolve:')) {
+      content = content.replace(/resolve\s*:\s*\{/, `resolve: {\n    alias: {\n      '@': path.resolve(__dirname, './src'),\n    },`);
+    } else {
+      const defineConfigRegex = /defineConfig\(\{\s*/;
+      if (defineConfigRegex.test(content)) {
+        content = content.replace(
+          defineConfigRegex,
+          `defineConfig({\n  resolve: {\n    alias: {\n      '@': path.resolve(__dirname, './src'),\n    },\n  },\n`
+        );
+      }
+    }
+    fs.writeFileSync(configPath, content, 'utf8');
+    console.log(`✅ Configured import alias "@" in ${path.basename(configPath)}`);
+  } catch (e) {
+    // Fail silently
   }
 }
 
@@ -1336,8 +1498,12 @@ async function installComponent(componentName, visited = new Set(), isCategoryIn
     if (data && data.files && data.files.length > 0) {
       const fileObj = data.files[0];
       const componentCode = fileObj.content;
-      const componentDeps = data.dependencies || [];
-      const internalDeps = data.internalDependencies || [];
+      const registryDeps = data.dependencies || [];
+      const autoDetectedExtDeps = detectExternalDependencies(componentCode);
+      const componentDeps = [...new Set([...registryDeps, ...autoDetectedExtDeps])];
+      const registryInternalDeps = data.internalDependencies || [];
+      const autoDetectedDeps = detectInternalDependencies(componentCode);
+      const internalDeps = [...new Set([...registryInternalDeps, ...autoDetectedDeps])];
 
       const toPath = path.join(paths.ALL_UI_TO, componentFile);
       fs.ensureDirSync(path.dirname(toPath));
@@ -1424,8 +1590,12 @@ async function installComponent(componentName, visited = new Set(), isCategoryIn
         }
 
         const componentCode = data.component.code;
-        const componentDeps = data.component.dependencies || [];
-        const internalDeps = data.component.internalDependencies || [];
+        const registryDeps = data.component.dependencies || [];
+        const autoDetectedExtDeps = detectExternalDependencies(componentCode);
+        const componentDeps = [...new Set([...registryDeps, ...autoDetectedExtDeps])];
+        const registryInternalDeps = data.component.internalDependencies || [];
+        const autoDetectedDeps = detectInternalDependencies(componentCode);
+        const internalDeps = [...new Set([...registryInternalDeps, ...autoDetectedDeps])];
 
         const toPath = path.join(paths.ALL_UI_TO, componentFile);
         fs.ensureDirSync(path.dirname(toPath));
@@ -1523,8 +1693,12 @@ async function installBlock(blockName, visited = new Set()) {
     }
 
     const blockCode = data.block.code;
-    const blockDeps = data.block.dependencies || [];
-    const internalDeps = data.block.internalDependencies || [];
+    const registryDeps = data.block.dependencies || [];
+    const autoDetectedExtDeps = detectExternalDependencies(blockCode);
+    const blockDeps = [...new Set([...registryDeps, ...autoDetectedExtDeps])];
+    const registryInternalDeps = data.block.internalDependencies || [];
+    const autoDetectedDeps = detectInternalDependencies(blockCode);
+    const internalDeps = [...new Set([...registryInternalDeps, ...autoDetectedDeps])];
 
     // Ensure the blocks subfolder exists
     const toPath = path.join(paths.ALL_UI_TO, 'blocks', blockFile);
@@ -2162,8 +2336,15 @@ async function handleMcpSetup() {
 
 // --- Main ---
 
-const command = process.argv[2];
-const arg = process.argv[3];
+let command = process.argv[2];
+let arg = process.argv[3];
+
+// Auto-correct double-command typos (e.g., "add add <component>" or "add-block add-block <block>")
+if (command === "add" && arg === "add") {
+  arg = process.argv[4];
+} else if (command === "add-block" && arg === "add-block") {
+  arg = process.argv[4];
+}
 
 (async () => {
   switch (command) {

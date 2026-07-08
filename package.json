@@ -1,7 +1,7 @@
 {
   "name": "lightswind-test",
   "homepage": "https://lightswind.com/",
-  "version": "1.1.4",
+  "version": "1.2.6",
   "description": "A collection of beautifully crafted React Components, Blocks & Templates for Modern Developers. Create stunning web applications effortlessly by using our 160+ professional and animated react components.",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -16,10 +16,7 @@
     "src/components/lib",
     "src/components/hooks",
     "src/styles",
-    "plugin.js",
-    "cli.js",
-    "lightswindv1.0.css",
-    "lightswindv1.0.min.js"
+    "plugin.js"
   ],
   "bin": {
     "lightswind-test": "bin/lightswind.js",
@@ -82,10 +79,8 @@
     "react-dom": "^18.0.0 || ^19.0.0"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.4",
-    "fuse.js": "^7.0.0",
-    "zod": "^3.22.4",
     "@gsap/react": "^2.1.2",
+    "@modelcontextprotocol/sdk": "^1.0.4",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.6.1",
     "@types/react-syntax-highlighter": "^15.5.13",
@@ -96,6 +91,7 @@
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.38.0",
     "fs-extra": "^11.3.0",
+    "fuse.js": "^7.0.0",
     "gsap": "^3.15.0",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.479.0",
@@ -111,7 +107,8 @@
     "swiper": "^12.1.4",
     "tailwind-merge": "^2.6.1",
     "three": "^0.184.0",
-    "uuid": "^11.1.0"
+    "uuid": "^11.1.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@motionone/utils": "^10.18.0",
@@ -129,6 +126,7 @@
     "postcss-cli": "^11.0.0",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.14",
+    "shx": "^0.4.0",
     "tailwindcss": "^4",
     "terser": "^5.36.0",
     "tsup": "^8.0.2",
