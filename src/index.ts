@@ -1,5 +1,5 @@
 // Lightswind UI entry point
-export const version = "1.2.6";
+export const version = "1.2.7";
 
 export function trackComponent(name: string) {
   if (typeof window === "undefined") return;
