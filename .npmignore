@@ -1,0 +1,56 @@
+# ─── Dev & Build Tools ────────────────────────────────────────
+normalize-imports.js
+tsconfig.json
+tsconfig.tsbuildinfo
+
+# ─── MCP Source (dist/mcp/ is published, src/mcp/ is not needed) ──
+src/mcp/
+
+# ─── MCP Registry Files (Smithery, Well-Known) ────────────────
+smithery.json
+smithery.yaml
+.well-known/
+
+# ─── AI Agent Docs (informational only) ───────────────────────
+LLMS.md
+
+# ─── Dev Configs ──────────────────────────────────────────────
+.eslintrc*
+.prettierrc*
+postcss.config.js
+tailwind.config.*
+tailwind.css
+
+# ─── Test Files ───────────────────────────────────────────────
+tests/
+coverage/
+__tests__/
+*.test.ts
+*.spec.ts
+scratch/
+
+# ─── Logs ─────────────────────────────────────────────────────
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# ─── OS Files ─────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ─── IDE ──────────────────────────────────────────────────────
+.vscode/
+.idea/
+
+# ─── Secrets (NEVER publish) ──────────────────────────────────
+.env
+.env.*
+.npmrc
+*.pem
+*.key
+
+# ─── History & Git ────────────────────────────────────────────
+.history/
+.git/
+.gitignore

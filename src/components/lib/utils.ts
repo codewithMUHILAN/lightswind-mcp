@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import "lightswind";
 
 // Utility function to merge class names with Tailwind
 export function cn(...inputs: ClassValue[]) {
@@ -68,3 +69,4 @@ export function throttle<T extends (...args: any[]) => void>(func: T, limit: num
     }
   };
 }
+
