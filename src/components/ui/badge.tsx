@@ -9,19 +9,19 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default:
-          "border-transparent bg-primary text-primary-foreground",
+          "badge-3d-default",
         secondary:
-          "border-transparent bg-secondary text-secondary-foreground",
+          "badge-3d-secondary",
         destructive:
-          "border-transparent bg-red-500 text-white",
+          "badge-3d-destructive",
         outline:
-          "text-foreground",
+          "badge-3d-outline",
         success:
-          "border-transparent bg-green-500 text-white",
+          "badge-3d-success",
         warning:
-          "border-transparent bg-amber-500 text-white",
+          "badge-3d-warning",
         info:
-          "border-transparent bg-primarylw text-white",
+          "badge-3d-info",
       },
       size: {
         default: "px-2.5 py-0.5 text-xs",

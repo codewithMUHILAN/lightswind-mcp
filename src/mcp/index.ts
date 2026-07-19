@@ -42,7 +42,7 @@ interface LightswindBlock {
 // ─── Data Fetching ──────────────────────────────────────────────────────────
 
 const REGISTRY_API = "https://lightswind.com/api/registry";
-const BLOCKS_METADATA_API = "https://pro.lightswind.com/api/mcp/blocks";
+const BLOCKS_METADATA_API = "https://lightswind.com/api/mcp/blocks";
 
 let componentsCache: LightswindComponent[] | null = null;
 let blocksCache: LightswindBlock[] | null = null;
@@ -81,7 +81,7 @@ async function fetchJSON(url: string): Promise<any> {
 }
 
 async function fetchSecureBlock(blockId: string, apiKey: string | null): Promise<any> {
-  const url = `https://pro.lightswind.com/api/v1/secure-block?id=${blockId}`;
+  const url = `https://lightswind.com/api/v1/secure-block?id=${blockId}`;
   return new Promise((resolve, reject) => {
     const parsedUrl = new URL(url);
     const options = {
@@ -109,7 +109,7 @@ async function fetchSecureBlock(blockId: string, apiKey: string | null): Promise
 }
 
 async function fetchSecureComponent(componentName: string, apiKey: string | null): Promise<any> {
-  const url = `https://pro.lightswind.com/api/v1/components?name=${componentName}`;
+  const url = `https://lightswind.com/api/v1/components?name=${componentName}`;
   return new Promise((resolve, reject) => {
     const parsedUrl = new URL(url);
     const options = {
@@ -178,11 +178,11 @@ async function getBlocks(): Promise<LightswindBlock[]> {
       blocksCache = items.map((b: any) => {
         let preview = b.previewUrl || "";
         if (preview.startsWith("/")) {
-          preview = `https://pro.lightswind.com${preview}`;
+          preview = `https://lightswind.com${preview}`;
         }
         let pageUrl = b.blockPageUrl || "";
         if (pageUrl.startsWith("/")) {
-          pageUrl = `https://pro.lightswind.com${pageUrl}`;
+          pageUrl = `https://lightswind.com${pageUrl}`;
         }
         return {
           id: b.id,
@@ -203,10 +203,10 @@ async function getBlocks(): Promise<LightswindBlock[]> {
     blocksCache = blocksData.map((b: any) => {
       let preview = b.previewUrl || "";
       if (preview.startsWith("/")) {
-        preview = `https://pro.lightswind.com${preview}`;
+        preview = `https://lightswind.com${preview}`;
       }
       const category = Array.isArray(b.category) ? b.category[0] : b.category || "general";
-      const pageUrl = `https://pro.lightswind.com/blocks/${category}/${b.id}`;
+      const pageUrl = `https://lightswind.com/blocks/${category}/${b.id}`;
       return {
         id: b.id,
         title: b.title,
@@ -472,7 +472,7 @@ async function handleGetComponent(args: Record<string, unknown>) {
               type: "text",
               text: `## 🔒 Pro Component: ${found.title} (\`${found.id}\`)\n` +
                 `- **Category**: ${found.keywords?.[0] ?? "general"}\n` +
-                `- **Details Page**: https://pro.lightswind.com/components/${found.id}\n\n` +
+                `- **Details Page**: https://lightswind.com/components/${found.id}\n\n` +
                 `> **Access Restricted**: ${errorMsg}\n\n` +
                 `### How to unlock:\n` +
                 `1. **Upgrade to Pro**: Go to https://lightswind.com/pricing and buy a Lightswind Pro plan to get your license key.\n` +
@@ -490,7 +490,7 @@ async function handleGetComponent(args: Record<string, unknown>) {
             type: "text",
             text: `## 🔒 Pro Component: ${found.title} (\`${found.id}\`)\n` +
               `- **Category**: ${found.keywords?.[0] ?? "general"}\n` +
-              `- **Details Page**: https://pro.lightswind.com/components/${found.id}\n\n` +
+              `- **Details Page**: https://lightswind.com/components/${found.id}\n\n` +
               `> **Connection Error**: Failed to retrieve component code securely from server (${e.message}).\n\n` +
               `### How to unlock:\n` +
               `1. **Upgrade to Pro**: Verify you have an active Pro subscription at https://lightswind.com/pricing.\n` +
@@ -670,8 +670,8 @@ async function handleGetBlock(args: Record<string, unknown>) {
               type: "text",
               text: `## 🔒 Pro Block: ${exactMatch.title} (\`${exactMatch.id}\`)\n` +
                 `- **Category**: ${exactMatch.category}\n` +
-                `- **Details Page**: ${exactMatch.blockPageUrl || "https://pro.lightswind.com/blocks"}\n` +
-                `- **Live Preview**: ${exactMatch.previewUrl || "https://pro.lightswind.com/blocks"}\n\n` +
+                `- **Details Page**: ${exactMatch.blockPageUrl || "https://lightswind.com/blocks"}\n` +
+                `- **Live Preview**: ${exactMatch.previewUrl || "https://lightswind.com/blocks"}\n\n` +
                 `> **Access Restricted**: ${errorMsg}\n\n` +
                 `### How to unlock:\n` +
                 `1. **Upgrade to Pro**: Go to https://lightswind.com/pricing and buy a Lightswind Pro plan to get your license key.\n` +
@@ -689,8 +689,8 @@ async function handleGetBlock(args: Record<string, unknown>) {
             type: "text",
             text: `## 🔒 Pro Block: ${exactMatch.title} (\`${exactMatch.id}\`)\n` +
               `- **Category**: ${exactMatch.category}\n` +
-              `- **Details Page**: ${exactMatch.blockPageUrl || "https://pro.lightswind.com/blocks"}\n` +
-              `- **Live Preview**: ${exactMatch.previewUrl || "https://pro.lightswind.com/blocks"}\n\n` +
+              `- **Details Page**: ${exactMatch.blockPageUrl || "https://lightswind.com/blocks"}\n` +
+              `- **Live Preview**: ${exactMatch.previewUrl || "https://lightswind.com/blocks"}\n\n` +
               `> **Connection Error**: Failed to retrieve block code securely from server (${e.message}).\n\n` +
               `### How to unlock:\n` +
               `1. **Upgrade to Pro**: Verify you have an active Pro subscription at https://lightswind.com/pricing.\n` +
@@ -713,7 +713,7 @@ async function handleGetBlock(args: Record<string, unknown>) {
             .slice(0, 10)
             .map(
               (b) =>
-                `### ${b.title} (\`${b.id}\`)\n- **Category**: ${b.category}\n- **Details Page**: ${b.blockPageUrl || "https://pro.lightswind.com/blocks"}\n- **Live Preview**: ${b.previewUrl ?? "https://pro.lightswind.com/blocks"}`
+                `### ${b.title} (\`${b.id}\`)\n- **Category**: ${b.category}\n- **Details Page**: ${b.blockPageUrl || "https://lightswind.com/blocks"}\n- **Live Preview**: ${b.previewUrl ?? "https://lightswind.com/blocks"}`
             )
             .join("\n\n") +
           `\n\n> To get the code for a specific block, query its ID directly (e.g. \`get block ${found[0].id}\`).`,
@@ -729,7 +729,7 @@ async function handleListBlocks() {
     content: [
       {
         type: "text",
-        text: `## Lightswind Pro Template Blocks (${blocks.length} total)\n\n**Categories:**\n${cats.map((c) => `- ${c}`).join("\n")}\n\n> Access at https://pro.lightswind.com/blocks — requires Pro subscription.\n\nUse \`get_block\` with a category name for details.`,
+        text: `## Lightswind Pro Template Blocks (${blocks.length} total)\n\n**Categories:**\n${cats.map((c) => `- ${c}`).join("\n")}\n\n> Access at https://lightswind.com/blocks — requires Pro subscription.\n\nUse \`get_block\` with a category name for details.`,
       },
     ],
   };
@@ -786,7 +786,7 @@ export default function Page() {
 
 ## Resources
 - Components: https://lightswind.com
-- Pro Blocks: https://pro.lightswind.com
+- Pro Blocks: https://lightswind.com
 - Docs: https://lightswind.com/docs`,
 
     react: `# Lightswind UI — React (Vite/CRA) Installation
@@ -813,7 +813,7 @@ import "lightswind/styles.css";
 
 ## Resources
 - Components: https://lightswind.com
-- Pro Blocks: https://pro.lightswind.com`,
+- Pro Blocks: https://lightswind.com`,
 
     vite: `# Lightswind UI — Vite Installation
 
@@ -923,7 +923,7 @@ Then use \`get_component\` to get the full React code.
 npm install lightswind
 \`\`\`
 
-Visit https://pro.lightswind.com for Pro template blocks matching "${section}".`;
+Visit https://lightswind.com for Pro template blocks matching "${section}".`;
   }
 
   return { content: [{ type: "text", text: example }] };

@@ -106,7 +106,7 @@ function writeLightswindConfig(config) {
 
 
 function getApiUrl() {
-  return process.env.LIGHTSWIND_API_URL || readRcConfig().apiUrl || "https://pro.lightswind.com";
+  return process.env.LIGHTSWIND_API_URL || readRcConfig().apiUrl || "https://lightswind.com";
 }
 
 function getApiKey() {
@@ -1571,7 +1571,7 @@ async function installComponent(componentName, visited = new Set(), isCategoryIn
       console.error(`\n❌ Component '${componentName}' not found in the free registry.`);
       console.error("If this is a Pro component, please login first:");
       console.error("  npx lightswind auth login --key=YOUR_KEY");
-      console.error("  Get your key at: https://pro.lightswind.com/setting/license");
+      console.error("  Get your key at: https://lightswind.com/setting/license");
       console.error("\nIf you believe this is a bug, check the component name at: https://lightswind.com/components\n");
       process.exit(1);
     }
@@ -2229,7 +2229,7 @@ async function handleLogout() {
   // Best-effort: notify the server so the activity log shows "Logout"
   if (savedKey) {
     try {
-      const apiUrl = config.apiUrl || 'https://pro.lightswind.com';
+      const apiUrl = config.apiUrl || 'https://lightswind.com';
       await makeRequest(
         `${apiUrl}/api/v1/auth/activity`,
         'POST',
@@ -2362,7 +2362,7 @@ if (command === "add" && arg === "add") {
         if (!key) {
           console.error("\n❌ Please specify your Pro API key.");
           console.error("Usage: npx lightswind auth login --key=<YOUR_KEY>");
-          console.error("You can generate a key at: https://pro.lightswind.com/setting/license\n");
+          console.error("You can generate a key at: https://lightswind.com/setting/license\n");
           process.exit(1);
         }
         await handleLogin(key);
