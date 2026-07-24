@@ -382,6 +382,40 @@ export default config;
 
 ---
 
+## 📜 Version Changelog & Release History
+
+### 🚀 v3.2.2 (2026-07-24) — Unified Architecture & Seamless Host Redirection
+- 🔗 **Unified Platform Integration**: Consolidated all Pro and Free server infrastructure into a single unified domain at [`lightswind.com`](https://lightswind.com).
+- 🔄 **Zero-Breakage Proxy Redirection**: Configured 1-to-1 server-side proxy rewrites for all CLI API endpoints (`/api/v1/auth/verify-license`, `/api/v1/components`, `/api/v1/secure-block`, `/registry.json`). Legacy CLI clients calling `pro.lightswind.com` now transparently receive `200 OK` responses without HTTP 308 redirect errors.
+- ⚡ **Tailwind CSS v4 Engine Enhancements**: Full native support for Tailwind CSS v4 `@theme` directive and zero-config PostCSS setup across all 160+ UI components and section blocks.
+- 🎨 **Enhanced High-Contrast & Transparent Mode**: Updated Bento Grid, Text Reveal Card, Magnifying Zoom, and Dynamic Navigation preview components with full light/dark theme adaptive styling and crisp contrast thresholds.
+- 🚀 **Canvas & Shader Trail Optimization**: Optimized `slice-cursor` particle engines using `Float32Array` typed arrays, stroke batching, and passive event listeners for smooth 60+ FPS performance.
+
+---
+
+### 📦 v3.2.1 (2026-07-20) — Pro Blocks & Section Manifest Delivery
+- 🧩 **Section Block Manifest API**: Added `add-block <block-id>` CLI command to fetch full-page section blocks (Heroes, SaaS Features, Pricing Tables, Dashboards) directly into your project's `src/components/lightswind/blocks/` directory.
+- 🔐 **Enhanced Licensing & Device Auth**: Introduced `npx lightswind auth login --key=sk_pro_...` with OS-level secure storage in `~/.lightswindrc`.
+- 🤖 **MCP Server Model Context Protocol**: Launched native MCP server support (`npx lightswind mcp`) allowing AI coding agents (Cursor, Claude Desktop, Windsurf, Continue) to search, fetch, and install components autonomously.
+
+---
+
+### ⚡ v3.1.0 (2026-06-15) — WebGL Shaders & 3D Interactive Primitives
+- 🧊 **3D & WebGL Canvas Components**: Introduced 16+ WebGL 3D elements including `3d-image-ring`, `plasma-globe`, `aurora-shader`, and `3d-carousel`.
+- 🎨 **Dynamic Theme Switcher**: Interactive `npx lightswind theme` command to easily select from 7 curated design token palettes (`default`, `deep-ocean`, `crimson`, `emerald`, `amber`, `amethyst`, `mono`).
+- 🛠️ **Framework Auto-Detection**: Enhanced CLI project detection for Vite, Next.js (App & Pages Router), Remix, and Create React App.
+
+---
+
+### 🌟 v3.0.0 (2026-05-01) — Initial Release of Lightswind UI 3.0
+- 🚀 **Source-First Architecture**: 160+ React components delivered as raw, copy-pasteable TypeScript (`.tsx`) source code owned by developers.
+- 🛠️ **Lightswind CLI**: Introduced `npx lightswind init`, `add`, and `list` commands.
+- 🎨 **Tailwind CSS Integration**: Built-in `lightswind/plugin` with support for global 3D depth toggles and responsive dark mode tokens.
+
+<br/>
+
+---
+
 ## Contributing
 
 Contributions, bug reports, and feature requests are welcome!
