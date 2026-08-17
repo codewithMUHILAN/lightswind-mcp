@@ -37,8 +37,8 @@ function readRcConfig() {
   if (fs.existsSync(rcPath)) {
     try {
       const raw = fs.readJsonSync(rcPath);
-      // Validate key format before trusting it — must start with sk_pro_ or sk_live_
-      if (raw.apiKey && !(/^sk_(pro|live)_[a-z0-9]+$/i.test(raw.apiKey))) {
+      // Validate key format before trusting it — must start with sk_pro_ or sk_live_ or be a hex key token
+      if (raw.apiKey && !(/^(sk_(pro|live)_[a-z0-9]+|[a-f0-9]{32,64})$/i.test(raw.apiKey))) {
         console.warn('⚠️  ~/.lightswindrc contains an invalid API key format. Ignoring.');
         raw.apiKey = null;
       }
@@ -267,8 +267,8 @@ async function fetchRegistry() {
 
 async function handleLogin(key) {
   // Validate key format locally before even hitting the network
-  if (!key || !(/^sk_(pro|live)_[a-z0-9]+$/i.test(key))) {
-    console.error('\n❌ Invalid key format. Keys must start with sk_pro_ or sk_live_\n');
+  if (!key || !(/^(sk_(pro|live)_[a-z0-9]+|[a-f0-9]{32,64})$/i.test(key))) {
+    console.error('\n❌ Invalid key format. Keys must start with sk_pro_ or sk_live_ (or be a valid API key token).\n');
     process.exit(1);
   }
 
@@ -654,9 +654,19 @@ function installDependencies(deps) {
     execSync(cmd, { stdio: "inherit", cwd: USER_CWD });
     console.log("✅ Dependencies installed successfully\n");
   } catch (error) {
+    if (pm === "npm") {
+      console.log("⚠️ Standard npm install failed (likely peer dependency conflict). Retrying with --legacy-peer-deps...");
+      try {
+        execSync(`${cmd} --legacy-peer-deps`, { stdio: "inherit", cwd: USER_CWD });
+        console.log("✅ Dependencies installed successfully with --legacy-peer-deps\n");
+        return;
+      } catch (retryErr) {
+        // Fall through to error output
+      }
+    }
     console.error(`❌ Failed to install dependencies using ${pm}`);
     console.error("💡 Try installing them manually:");
-    console.error(`   ${pm === "npm" ? "npm install" : pm + " add"} ${deps.join(" ")}`);
+    console.error(`   ${pm === "npm" ? "npm install --legacy-peer-deps" : pm + " add"} ${deps.join(" ")}`);
   }
 }
 
@@ -1470,6 +1480,7 @@ async function installComponent(componentName, visited = new Set(), isCategoryIn
   const localSourceExists = fs.existsSync(fromPath);
 
   if (isRoot && !isCategoryInstall) {
+    _accumulatedDeps.clear();
     console.log(`\n📦 Installing ${componentName}...`);
     console.log(`📦 Detected: ${paths.FRAMEWORK.name}`);
     console.log(`📁 Installing to: ${paths.ALL_UI_TO}\n`);
@@ -1516,21 +1527,7 @@ async function installComponent(componentName, visited = new Set(), isCategoryIn
       const missingDeps = getMissingDependencies(componentDeps, userPkg);
 
       if (missingDeps.length > 0) {
-        if (isCategoryInstall) {
-          missingDeps.forEach(dep => _accumulatedDeps.add(dep));
-        } else {
-          if (isRoot) {
-            console.log(`📦 ${componentName} requires: ${missingDeps.join(", ")}`);
-            const shouldInstall = await promptUser("Install dependencies? (Y/n): ");
-            if (shouldInstall) {
-              installDependencies(missingDeps);
-            } else {
-              console.log("⚠️  Skipping dependency installation.");
-            }
-          } else {
-            installDependencies(missingDeps);
-          }
-        }
+        missingDeps.forEach(dep => _accumulatedDeps.add(dep));
       }
 
       // Install any internally imported components recursively
@@ -1612,15 +1609,7 @@ async function installComponent(componentName, visited = new Set(), isCategoryIn
           const userPkg = readUserPackageJson();
           const missingDeps = getMissingDependencies(componentDeps, userPkg);
           if (missingDeps.length > 0) {
-            if (isCategoryInstall) {
-              missingDeps.forEach(dep => _accumulatedDeps.add(dep));
-            } else {
-              console.log(`📦 ${componentName} requires external packages: ${missingDeps.join(", ")}`);
-              const shouldInstall = !isRoot || await promptUser("Install dependencies? (Y/n): ");
-              if (shouldInstall) {
-                installDependencies(missingDeps);
-              }
-            }
+            missingDeps.forEach(dep => _accumulatedDeps.add(dep));
           }
         }
 
@@ -1639,6 +1628,20 @@ async function installComponent(componentName, visited = new Set(), isCategoryIn
 
   // Only run post-install configuration if this is the root component being installed and not part of a category/all install
   if (isRoot && !isCategoryInstall) {
+    if (_accumulatedDeps.size > 0) {
+      const userPkg = readUserPackageJson();
+      const finalMissing = getMissingDependencies([..._accumulatedDeps], userPkg);
+      if (finalMissing.length > 0) {
+        console.log(`\n📦 ${componentName} requires: ${finalMissing.join(", ")}`);
+        const shouldInstall = await promptUser("Install dependencies? (Y/n): ");
+        if (shouldInstall) {
+          installDependencies(finalMissing);
+        } else {
+          console.log("⚠️  Skipping dependency installation.");
+        }
+      }
+    }
+
     await copySharedUtils();
     autoConfigureTailwindPlugin();
 
@@ -1715,16 +1718,16 @@ async function installBlock(blockName, visited = new Set()) {
       console.log(`✅ Installed block: ${blockFile}`);
     }
 
+    if (isRoot) {
+      _accumulatedDeps.clear();
+    }
+
     // Install external package dependencies (e.g. framer-motion, lucide-react)
     if (blockDeps.length > 0) {
       const userPkg = readUserPackageJson();
       const missingDeps = getMissingDependencies(blockDeps, userPkg);
       if (missingDeps.length > 0) {
-        console.log(`📦 ${blockName} requires external packages: ${missingDeps.join(", ")}`);
-        const shouldInstall = !isRoot || await promptUser("Install dependencies? (Y/n): ");
-        if (shouldInstall) {
-          installDependencies(missingDeps);
-        }
+        missingDeps.forEach(dep => _accumulatedDeps.add(dep));
       }
     }
 
@@ -1746,6 +1749,20 @@ async function installBlock(blockName, visited = new Set()) {
 
   // Post-install setup
   if (isRoot) {
+    if (_accumulatedDeps.size > 0) {
+      const userPkg = readUserPackageJson();
+      const finalMissing = getMissingDependencies([..._accumulatedDeps], userPkg);
+      if (finalMissing.length > 0) {
+        console.log(`\n📦 Block '${blockName}' requires: ${finalMissing.join(", ")}`);
+        const shouldInstall = await promptUser("Install dependencies? (Y/n): ");
+        if (shouldInstall) {
+          installDependencies(finalMissing);
+        } else {
+          console.log("⚠️  Skipping dependency installation.");
+        }
+      }
+    }
+
     await copySharedUtils();
     autoConfigureTailwindPlugin();
 
@@ -2352,11 +2369,20 @@ if (command === "add" && arg === "add") {
       const subCommand = (arg || '').toLowerCase();
       if (subCommand === "login") {
         let key = null;
-        const keyArg = process.argv.slice(4).find(a => a.startsWith('--key='));
-        if (keyArg) {
-          key = keyArg.split('=')[1];
+        const keyEqualsArg = process.argv.slice(4).find(a => a.startsWith('--key='));
+        if (keyEqualsArg) {
+          key = keyEqualsArg.split('=').slice(1).join('=');
         } else {
-          key = process.argv[4];
+          const keySpaceIdx = process.argv.indexOf('--key');
+          if (keySpaceIdx !== -1 && process.argv[keySpaceIdx + 1]) {
+            key = process.argv[keySpaceIdx + 1];
+          } else if (process.argv[4]) {
+            key = process.argv[4];
+          }
+        }
+
+        if (key) {
+          key = key.replace(/^--key=/, '').replace(/^--/, '').trim();
         }
 
         if (!key) {
