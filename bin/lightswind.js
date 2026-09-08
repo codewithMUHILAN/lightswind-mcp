@@ -1044,12 +1044,12 @@ function configureTailwindV3Plugin() {
     if (content.includes('plugins:')) {
       content = content.replace(
         /plugins:\s*\[/,
-        "plugins: [\n    require('lightswind/plugin'),"
+        "plugins: [\n    require('lightswind/plugin')({ effect3d: false }),"
       );
     } else {
       content = content.replace(
         /module\.exports\s*=\s*{/,
-        "module.exports = {\n  plugins: [require('lightswind/plugin')],"
+        "module.exports = {\n  plugins: [require('lightswind/plugin')({ effect3d: false })],"
       );
     }
 
@@ -1129,6 +1129,13 @@ function autoConfigureTailwindPlugin() {
     if (!configureTailwindV3Plugin()) {
       appendCssFallback();
     }
+  }
+
+  // Ensure 3D Shade Effect is strictly OFF (false) on initial install
+  const config = readLightswindConfig();
+  if (config.effect3d === undefined) {
+    config.effect3d = false;
+    writeLightswindConfig(config);
   }
 }
 
@@ -1270,9 +1277,9 @@ function toggle3D(status) {
     try {
       let content = fs.readFileSync(cssPath, 'utf-8');
       if (on) {
-        content = content.replace(/@plugin\s+['"]lightswind\/plugin['"]\s*;?/g, "@plugin 'lightswind/plugin' { effect3d: true };");
+        content = content.replace(/@plugin\s+['"]lightswind\/plugin['"](\s*\{\s*effect3d\s*:\s*(false|true)\s*\}\s*)?;?/g, "@plugin 'lightswind/plugin' { effect3d: true };");
       } else {
-        content = content.replace(/@plugin\s+['"]lightswind\/plugin['"]\s*\{\s*effect3d\s*:\s*true\s*\}\s*;?/g, "@plugin 'lightswind/plugin';");
+        content = content.replace(/@plugin\s+['"]lightswind\/plugin['"](\s*\{\s*effect3d\s*:\s*(false|true)\s*\}\s*)?;?/g, "@plugin 'lightswind/plugin';");
       }
       fs.writeFileSync(cssPath, content, 'utf-8');
       console.log(`✅ 3D Shade configuration updated in ${path.basename(cssPath)}`);
@@ -1289,9 +1296,9 @@ function toggle3D(status) {
     try {
       let content = fs.readFileSync(configPath, 'utf-8');
       if (on) {
-        content = content.replace(/require\(['"]lightswind\/plugin['"]\)/g, "require('lightswind/plugin')({ effect3d: true })");
+        content = content.replace(/require\(['"]lightswind\/plugin['"]\)(\(\{\s*effect3d\s*:\s*(false|true)\s*\}\)|\(\))?/g, "require('lightswind/plugin')({ effect3d: true })");
       } else {
-        content = content.replace(/require\(['"]lightswind\/plugin['"]\)\(\{\s*effect3d\s*:\s*true\s*\}\)/g, "require('lightswind/plugin')");
+        content = content.replace(/require\(['"]lightswind\/plugin['"]\)(\(\{\s*effect3d\s*:\s*(false|true)\s*\}\)|\(\))?/g, "require('lightswind/plugin')({ effect3d: false })");
       }
       fs.writeFileSync(configPath, content, 'utf-8');
       console.log(`✅ 3D Shade configuration updated in ${path.basename(configPath)}`);
@@ -2465,6 +2472,12 @@ if (command === "add" && arg === "add") {
           process.exit(1);
         }
       }
+      break;
+    }
+    case "--version":
+    case "-v": {
+      const pkg = require("../package.json");
+      console.log(`v${pkg.version}`);
       break;
     }
     case "--help":

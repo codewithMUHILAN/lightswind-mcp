@@ -5,7 +5,8 @@ const defaultTheme = require("tailwindcss/defaultTheme");
 module.exports = plugin.withOptions(
   function (options = {}) {
     return function ({ addBase, theme, addComponents, addUtilities }) {
-      const effect3d = options.effect3d === true || options.effect3d === 'true';
+      // Strict default: effect3d is FALSE by default unless explicitly passed as true
+      const effect3d = Boolean(options && (options.effect3d === true || options.effect3d === 'true'));
 
       const add3D = (selector, flatStyles, active3DStyles) => {
         addComponents({
@@ -512,6 +513,15 @@ module.exports = plugin.withOptions(
       },
     });
 
+
+      // Custom 3D Shade utility class
+      add3D(".lw-3d-shade", {
+        filter: "none",
+        boxShadow: "none",
+      }, {
+        filter: "url(#lw-3d-shade) !important",
+        boxShadow: "inset 0 1px 0 0 rgba(255, 255, 255, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.15), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.25), 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important",
+      });
 
             // Premium 3D Buttons & Components (Flat by default, 3D on options.effect3d or .lw-3d wrapper)
       add3D(".btn-3d-default", {
