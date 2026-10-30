@@ -1,3 +1,4 @@
-export declare const version = "3.2.3";
-export declare function trackComponent(_name: string): void;
-//# sourceMappingURL=index.d.ts.map
+declare const version: string;
+declare function trackComponent(name: string): void;
+
+export { trackComponent, version };

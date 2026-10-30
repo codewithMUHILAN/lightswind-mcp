@@ -4,7 +4,7 @@
   "version": "3.2.5",
   "description": "A collection of beautifully crafted React Components, Blocks & Templates for Modern Developers. Create stunning web applications effortlessly by using our 160+ professional and animated react components.",
   "main": "dist/index.js",
-  "module": "dist/index.esm.js",
+  "module": "dist/index.mjs",
   "sideEffects": [
     "*.css",
     "*.scss"
@@ -29,10 +29,11 @@
     "lightswind-ui-mcp": "dist/mcp/index.js"
   },
   "scripts": {
-    "build": "tsc && node normalize-imports.js",
+    "build": "tsup",
     "dev": "tsup --watch",
     "typecheck": "tsc --noEmit",
-    "build-css": "npx postcss tailwind.css -o ./src/lightswind.css"
+    "pretest": "npm run build",
+    "test": "node --test \"tests/*.test.mjs\""
   },
   "keywords": [
     "component-library",
@@ -103,11 +104,15 @@
     "three": { "optional": true }
   },
   "dependencies": {
-    "fs-extra": "^11.3.0"
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "fs-extra": "^11.3.0",
+    "fuse.js": "^7.5.0",
+    "tailwind-merge": "^2.6.1"
   },
   "devDependencies": {
     "@gsap/react": "^2.1.2",
-    "@modelcontextprotocol/sdk": "^1.0.4",
     "@motionone/utils": "^10.18.0",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.6.1",
@@ -126,7 +131,6 @@
     "date-fns": "^4.1.0",
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.38.0",
-    "fuse.js": "^7.0.0",
     "gsap": "^3.15.0",
     "input-otp": "^1.4.2",
     "javascript-obfuscator": "^4.1.1",
@@ -135,7 +139,6 @@
     "next-themes": "^0.4.6",
     "ogl": "^1.0.11",
     "postcss": "^8.4.49",
-    "postcss-cli": "^11.0.0",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.14",
     "react-day-picker": "^9.14.0",
@@ -155,5 +158,8 @@
     "typescript": "^5.4.2",
     "uuid": "^11.1.0",
     "zod": "^3.22.4"
+  },
+  "overrides": {
+    "esbuild": "^0.28.2"
   }
 }
