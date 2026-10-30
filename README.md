@@ -384,6 +384,15 @@ export default config;
 
 ## 📜 Version Changelog & Release History
 
+### 🛡️ v3.2.6 (2026-10-30) — Security Hardening, Resilient MCP Server & Dual ESM Build
+- 🔒 **CLI Security & Sanitization**: Validated dependency specs and component/block names with strict regex matchers to prevent arbitrary command injection and directory traversal attacks.
+- 🤖 **Resilient MCP Server**: Promoted `@modelcontextprotocol/sdk` and `fuse.js` to direct dependencies, added 10s request deadlines, query deduplication, and retry recovery on network errors.
+- ⚡ **Dual ESM / CommonJS Packaging**: Replaced legacy build with high-performance `tsup` dual bundling (`dist/index.mjs` and `dist/index.js`), automated CSS asset extraction, and compile-time version stamping.
+- 🛡️ **Privacy-First Telemetry**: Strict opt-out compliance honoring `LIGHTSWIND_NO_TELEMETRY` and Do Not Track (`DNT: 1`), automatically ignoring local development environments.
+- 🧪 **109 Automated Test Suites**: Comprehensive node:test coverage validating CLI execution, MCP JSON-RPC protocol, and build tarball integrity.
+
+---
+
 ### 🚀 v3.2.2 (2026-07-24) — Unified Architecture & Seamless Host Redirection
 - 🔗 **Unified Platform Integration**: Consolidated all Pro and Free server infrastructure into a single unified domain at [`lightswind.com`](https://lightswind.com).
 - 🔄 **Zero-Breakage Proxy Redirection**: Configured 1-to-1 server-side proxy rewrites for all CLI API endpoints (`/api/v1/auth/verify-license`, `/api/v1/components`, `/api/v1/secure-block`, `/registry.json`). Legacy CLI clients calling `pro.lightswind.com` now transparently receive `200 OK` responses without HTTP 308 redirect errors.

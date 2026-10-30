@@ -1,5 +1,5 @@
 // src/index.ts
-var version = "3.2.5";
+var version = "3.2.6";
 var TELEMETRY_URL = "https://pro.lightswind.com/api/npm-telemetry";
 var RATE_LIMIT_MS = 6048e5;
 function isTelemetryAllowed() {
